@@ -7,22 +7,57 @@
 // Tendre que hacer un array vacio que vaya conteniendo la lista de compras de la persona
 
 
-let valid
+function envio(subtotal){
+    opcion= prompt("Desea incluir el envio? El envio tiene un costo de $300 sobre el subtotal.")
+    opcion=opcion.toLowerCase()
+    while(opcion!="si" && opcion!="no"){
+        opcion = prompt(("La opcion no es valida, vuelva a intentarlo.\nEscriba SI agregar envio o NO si no desea que se realice el envio."))
+        opcion=opcion.toLowerCase()
+    }
+    if (opcion=="si") {
+        alert("Se ha incluido el envio al precio.")
+        return subtotal+=300
+    } else {
+        alert("No se ha incluido envio.")
+    }
+}
+
+function sigueComprando(){
+    opcion= prompt("Desea seguir comprando?")
+    opcion=opcion.toLowerCase()
+    while(opcion!="si" && opcion!="no"){
+        opcion = prompt(("La opcion no es valida, vuelva a intentarlo.\nEscriba SI para seguir comprando o NO para terminar la compra."))
+        opcion=opcion.toLowerCase()
+    }
+    if (opcion=="si") {
+        return true
+    } else {
+        return false
+    }
+}
+
+function calcularSubtotal(){
+    saldo=0
+    cervezas.forEach(element => {
+        saldo= saldo + element.cantidad * element.precio
+    });
+    return saldo
+}
 
 class Beer{
     constructor(nombre, precio, alcohol, ibu, descripcion){
         this.nombre = nombre
-        this.precio = Number(precio)            // valor de la pinta
+        this.precio = Number(precio)            // valor del porron
         this.alcohol = Number(alcohol)
         this.ibu = Number(ibu)
         this.descripcion = descripcion
-        this.cantidad = 0
+        this.cantidad = 0                       //cantidad que va a ser usado para armar el carrito de compras
     }
     agregar(cant){
         this.cantidad += cant
     }
     dtoMayor(){
-        this.precio *= 4       // cada botellon viene por 2 litros, la pinta es medio litro, asi que lo multiplico por el equivalente
+        this.precio *= 4       // cada botellon viene por 2 litros, el porron es medio litro, asi que lo multiplico por el equivalente
         this.precio *= 0.85      // 15% de descuento por comprar por botellon
     }
 }
@@ -45,27 +80,25 @@ let cervezas = [beer0,beer1,beer2,beer3,beer4,beer5,beer6,beer7,beer8,beer9]
 
 
 
-alert("Bienvenido a la tienda DrunkDwarf de cerveza.")
+alert("Bienvenido a la tienda DrunkDwarf de cerveza artesanal.")
 do{
-let compraPor = prompt("En DrunkDwarf ofrecemos la venta por pinta o por botellon.\nEl botellon tiene un descuento del 15% respecto a la venta por pinta.\nDesea comprar por Pinta o Botellon?")
+let compraPor = prompt("En DrunkDwarf ofrecemos la venta por porron o por sixpack.\nEl sixpack tiene un descuento del 15% respecto a la venta por porron.\nDesea comprar por porron o sixpack?")
 compraPor=compraPor.toLowerCase()
 
-if (compraPor == "pinta") {
+if (compraPor == "porron") {
     valid=true
 } 
-else if(compraPor=="botellon") {
+else if(compraPor=="sixpack") {
     cervezas.forEach(element => {
         element.dtoMayor()
     });
     valid=true
 } else {
-    alert("Por favor seleccione una opcion valida.\nEscriba PINTA o BOTELLON segun como quiera realizar la compra.")
+    alert("Por favor seleccione una opcion valida.\nEscriba PORRON o SIXPACK segun como quiera realizar la compra.")
     valid = false
 }
 
-cervezas.forEach(element => {
-    console.log(element.precio)
-});
+
 }while(valid==false)
 
 let listarCervezas = ""
@@ -81,7 +114,8 @@ moreText= "0. No deseo comprar nada mas.\nSeleccione la cerveza que quiera con e
 do{
     numeroElegido=prompt(listarCervezas+moreText)
     numeroElegido=numeroElegido.toUpperCase()
-//    alert(numeroElegido+typeof(numeroElegido))
+
+
 if(numeroElegido=="0"){
     moreBeer=false
 
@@ -89,7 +123,6 @@ if(numeroElegido=="0"){
     infoSobre=prompt("Seleccione sobre que cerveza desea saber más información\n"+listarCervezas)
     descripcionCerveza=cervezas[infoSobre] 
     alert(`${descripcionCerveza.nombre}:\nAlcohol: ${descripcionCerveza.alcohol}%, IBU: ${descripcionCerveza.ibu}\n${descripcionCerveza.descripcion}`)
-//    alert("Seleccione que cerveza va a querer comprar a continuacion.")
     moreBeer=true
 
 }else if(numeroElegido>0 && numeroElegido<11){
@@ -100,34 +133,24 @@ if(numeroElegido=="0"){
     if (cantidadElegida>=0) {
         cervezas[numeroElegido].cantidad += cantidadElegida
         valido=true
-        alert(`Agregó ${cantidadElegida} ${cervezas[numeroElegido].nombre}`)
+        saldoCarrito=calcularSubtotal()
+        alert(`Agregó ${cantidadElegida} ${cervezas[numeroElegido].nombre}\nSubtotal $${saldoCarrito}`)
+        moreBeer=sigueComprando()
     } else {
         alert("Por favor seleccione una opcion valida.")
         valido=false
     }}while(valido==false)
-    
-//    alert(typeof(cervezas[numeroElegido].cantidad))
-//    alert(cervezas[numeroElegido].cantidad)
-    moreBeer=true    
+  
 } else{
     alert("Por favor seleccione una opcion valida. Escriba un número del 0 al 10 o INFO.")
     moreBeer=true
-}
 
-}while(moreBeer==true)
-
+}}while(moreBeer==true)
 
 
 
+saldoCarrito=calcularSubtotal()
 
-let saldoCarrito = Number(0)
-
-cervezas.forEach(element => {
-
-    console.log(element.cantidad+typeof(element.cantidad)+" "+element.precio+typeof(element.precio))
-    
-    saldoCarrito= saldoCarrito + element.cantidad * element.precio
-});
 
 let resumenDeCompra = ""
 cervezas.forEach(element => {
@@ -142,5 +165,6 @@ cervezas.forEach(element => {
 
 alert("Detalle de su compra:\n"+resumenDeCompra+"\nSubtotal:       $"+saldoCarrito)
 
-// let saldoCarrito = cervezas.reduce((acumulador,actual)=> acumulador+(actual.cantidad*actual.precio),0)
-alert("El total de su compra es de $"+saldoCarrito)
+saldoCarrito=envio(saldoCarrito)
+
+alert("El total de su compra es de $"+saldoCarrito+"\nGracias por comprar en DrunkDwarf")
