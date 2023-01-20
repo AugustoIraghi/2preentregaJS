@@ -19,8 +19,23 @@ function envio(subtotal){
         return subtotal+=300
     } else {
         alert("No se ha incluido envio.")
+        return subtotal
     }
 }
+
+function esNum(){
+    do{
+    incognita=Number(prompt("Seleccione sobre que cerveza desea saber más información\n"+listarCervezas))
+    if (0<incognita && incognita<11) {
+        incognita--
+        return incognita
+    } else {
+        alert("Por favor seleccione una opcion valida. Escriba un número del 0 al 10 o INFO.")
+        loop=true
+    }
+    }while(loop=true)
+}
+
 
 function sigueComprando(){
     opcion= prompt("Desea seguir comprando?")
@@ -35,6 +50,7 @@ function sigueComprando(){
         return false
     }
 }
+
 
 function calcularSubtotal(){
     saldo=0
@@ -120,7 +136,8 @@ if(numeroElegido=="0"){
     moreBeer=false
 
 }else if(numeroElegido=="INFO"){
-    infoSobre=prompt("Seleccione sobre que cerveza desea saber más información\n"+listarCervezas)
+    // infoSobre=prompt("Seleccione sobre que cerveza desea saber más información\n"+listarCervezas)
+    infoSobre=esNum()
     descripcionCerveza=cervezas[infoSobre] 
     alert(`${descripcionCerveza.nombre}:\nAlcohol: ${descripcionCerveza.alcohol}%, IBU: ${descripcionCerveza.ibu}\n${descripcionCerveza.descripcion}`)
     moreBeer=true
@@ -151,6 +168,10 @@ if(numeroElegido=="0"){
 
 saldoCarrito=calcularSubtotal()
 
+// if(saldoCarrito==0){
+//     alert()
+// }
+
 
 let resumenDeCompra = ""
 cervezas.forEach(element => {
@@ -167,4 +188,4 @@ alert("Detalle de su compra:\n"+resumenDeCompra+"\nSubtotal:       $"+saldoCarri
 
 saldoCarrito=envio(saldoCarrito)
 
-alert("El total de su compra es de $"+saldoCarrito+"\nGracias por comprar en DrunkDwarf")
+alert("El total de su compra es de $"+saldoCarrito+"\nGracias por comprar en DrunkDwarf")   
